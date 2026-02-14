@@ -3,11 +3,9 @@
   "description": "Real-time browser protection against sensitive data leaks & deepfake scams.",
   "version": "0.1.0",
   "manifest_version": 3,
-  "permissions": ["storage"],
-  "host_permissions": ["<all_urls>"],
-  "background": {
-    "service_worker": "background.js"
-  },
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["http://209.222.12.247:8000/*"],
+  "background": { "service_worker": "background.js" },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

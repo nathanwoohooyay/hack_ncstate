@@ -6,8 +6,8 @@
   console.log("ShieldLens injected.");
 
   // ===== Backend switch =====
-  const USE_BACKEND = false; // <- set to true when backend is running
-  const BACKEND_URL = "http://localhost:8000"; // <- change to Vultr later
+  const USE_BACKEND = true; // <- set to true when backend is running
+  const BACKEND_URL = "http://209.222.12.247:8000"; // <- change to Vultr later
   const BACKEND_ENDPOINT = "/analyze/upload"; // <- ask Person 2 to match this route
 
   const HIGH_RISK_THRESHOLD = 71;
@@ -180,18 +180,43 @@
   // =========================
   // Backend analysis (file -> base64 -> Gemini)
   // =========================
-  async function backendAnalyzeFile(file) {
-    const url = `${BACKEND_URL}${BACKEND_ENDPOINT}`;
-    const file_base64 = await fileToBase64(file);
+  function callBackendAnalyzeText({ text, filename, mime_type }) {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      {
+        type: "ANALYZE_TEXT",
+        text,
+        filename,
+        mime_type,
+        page_url: location.href,
+      },
+      (res) => {
+        if (!res) return reject(new Error("No response from background"));
+        if (!res.ok) return reject(new Error(res.error || "Backend error"));
+        resolve(res.data);
+      }
+    );
+  });
+}
 
-    return await postJSON(url, {
-      filename: file.name,
-      mime_type: file.type || "application/octet-stream",
-      file_base64,
-      page_url: location.href,
-      source: "file_upload"
-    });
-  }
+function callBackendAnalyzeFileBase64({ file_base64, filename, mime_type }) {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      {
+        type: "ANALYZE_FILE_BASE64",
+        file_base64,
+        filename,
+        mime_type,
+        page_url: location.href,
+      },
+      (res) => {
+        if (!res) return reject(new Error("No response from background"));
+        if (!res.ok) return reject(new Error(res.error || "Backend error"));
+        resolve(res.data);
+      }
+    );
+  });
+}
 
   // =========================
   // FILE INTERCEPTION
@@ -216,10 +241,13 @@
         text = "";
       }
 
-      const isBinary = !!text && (text.startsWith("PK") || text.includes("\u0000"));
+      const isProbablyBinary =
+        !text ||
+        text.includes("\u0000") ||
+        (file.type && !file.type.startsWith("text/") && !file.name.endsWith(".txt") && !file.name.endsWith(".env"));
 
       // ===== Binary files (DOCX/PDF): show modal with "Scan with AI" button =====
-      if (isBinary) {
+      if (isProbablyBinary) {
         showModal({
           title: "ShieldLens Notice",
           subtitle: "This file type cannot be scanned locally (binary format).",
@@ -238,7 +266,12 @@
             });
 
             try {
-              const report = await backendAnalyzeFile(file);
+              const file_base64 = await fileToBase64(file);
+              const report = await callBackendAnalyzeFileBase64({
+                file_base64,
+                filename: file.name,
+                mime_type: file.type || "application/octet-stream",
+              });
 
               const score = Number(report?.risk_score ?? report?.deepfake_percentage ?? 0);
               const types = Array.isArray(report?.detected_types) ? report.detected_types : [];
@@ -291,7 +324,11 @@
               });
 
               try {
-                const report = await backendAnalyzeFile(file);
+                const report = await callBackendAnalyzeText({
+                text,
+                filename: file.name,
+                mime_type: file.type || "text/plain",
+              });
 
                 const score = Number(report?.risk_score ?? 0);
                 const types = Array.isArray(report?.detected_types) ? report.detected_types : [];
