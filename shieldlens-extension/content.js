@@ -8,7 +8,7 @@
   // ===== Backend switch =====
   const USE_BACKEND = false; // <- set to true when backend is running
   const BACKEND_URL = "http://localhost:8000"; // <- change to Vultr later
-  const BACKEND_ENDPOINT = "/analyze/upload-file"; // <- ask Person 2 to match this route
+  const BACKEND_ENDPOINT = "/analyze/upload"; // <- ask Person 2 to match this route
 
   const HIGH_RISK_THRESHOLD = 71;
 
