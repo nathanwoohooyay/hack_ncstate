@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ShieldLens AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Background image layer (set in styles.css) -->
+  <div class="bg"></div>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+
+  <header class="nav">
+    <div class="brand">
+      <span class="logo">SL</span>
+      <span class="name">ShieldLens AI</span>
+    </div>
+    <nav class="links">
+      <a href="#install">Install</a>
+      <a href="#features">Features</a>
+      <a href="#trust">Trust & Safety</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <p class="pill">Real-time Protection</p>
+
+        <h1>
+          Stop <span class="accent">data leaks</span> before they happen.
+          Detect <span class="accent">deepfake scams</span> before you trust them.
+        </h1>
+
+        <p class="sub">
+          ShieldLens runs inside your browser and warns you in real-time when uploads or pasted text contain sensitive data.
+          It can also scan on-page videos for deepfake risk and provide a confidence score with a clear recommendation.
+        </p>
+
+        <div class="cta-row">
+          <!-- TODO: Replace href with your real extension zip path -->
+          <!-- Put your zip inside /assets/ and name it exactly like below OR update the filename -->
+          <a class="btn primary" href="./assets/shieldlens-extension.zip" download>
+            Download ShieldLens (Chrome Extension)
+          </a>
+
+          <a class="btn ghost" href="#install">Install Instructions</a>
+        </div>
+
+        <div class="note">
+          Works on Chrome / Edge (Chromium). Not published in Chrome Web Store yet — install via Developer Mode in ~2 minutes.
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="card">
+          <div class="card-title">2-Minute Install</div>
+          <ol class="steps compact">
+            <li>Download ShieldLens (.zip)</li>
+            <li>Unzip the folder</li>
+            <li>Open <code>chrome://extensions</code></li>
+            <li>Enable <b>Developer mode</b></li>
+            <li><b>Load unpacked</b> → select the unzipped folder</li>
+          </ol>
+          <div class="card-foot">
+            <span class="dot"></span> Real-time alerts + risk score
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <h2>What ShieldLens does</h2>
+
+      <div class="grid three">
+        <div class="panel">
+          <h3>Upload Protection</h3>
+          <p>Intercepts uploads and warns you before sensitive info leaves your browser.</p>
+          <ul class="bullets">
+            <li>SSNs, passwords, API keys</li>
+            <li>Private keys & secrets</li>
+            <li>Risk score + remediation</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Paste Protection</h3>
+          <p>Detects risky pasted content in forms, chats, and support portals.</p>
+          <ul class="bullets">
+            <li>Instant warning modal</li>
+            <li>Blocks accidental leaks</li>
+            <li>Plain-English explanation</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Deepfake Detection</h3>
+          <p>Scans videos directly in your browser for deepfake risk.</p>
+          <ul class="bullets">
+            <li>Frame sampling</li>
+            <li>Likelihood score + trust advice</li>
+            <li>Scam prevention focus</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" class="section">
+      <h2>Install ShieldLens</h2>
+
+      <div class="grid two">
+        <div class="panel">
+          <h3>Step 1 — Download & unzip</h3>
+          <ul>
+            <li>Click <b>Download ShieldLens</b>.</li>
+            <li>Unzip the folder (you need a normal folder).</li>
+            <li>Verify the folder contains <code>manifest.json</code>.</li>
+          </ul>
+          <div class="callout">
+            <b>Why unzip?</b> Chrome “Load unpacked” requires the extracted extension folder.
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Step 2 — Open Chrome Extensions</h3>
+          <ol class="steps">
+            <li>Open Chrome</li>
+            <li>Go to <code>chrome://extensions</code></li>
+          </ol>
+        </div>
+
+        <div class="panel">
+          <h3>Step 3 — Enable Developer mode</h3>
+          <ol class="steps">
+            <li>Toggle <b>Developer mode</b> ON (top-right)</li>
+            <li>New buttons appear: <b>Load unpacked</b>, <b>Pack extension</b>, etc.</li>
+          </ol>
+        </div>
+
+        <div class="panel">
+          <h3>Step 4 — Load ShieldLens</h3>
+          <ol class="steps">
+            <li>Click <b>Load unpacked</b></li>
+            <li>Select the unzipped ShieldLens folder</li>
+            <li>ShieldLens appears in your extension list</li>
+          </ol>
+          <div class="callout">
+            If you get an error, you likely selected the wrong folder.
+            Choose the folder that contains <code>manifest.json</code>.
+          </div>
+        </div>
+
+        <div class="panel wide">
+          <h3>Step 5 — Test it</h3>
+
+          <div class="mini">
+            <button class="btn small" id="copyTest">Copy test text</button>
+            <span class="hint">Paste into a file called <code>test.txt</code> and upload it anywhere.</span>
+          </div>
+
+          <pre class="code" id="testText">AWS_SECRET_ACCESS_KEY=abcd1234fake
+PRIVATE_KEY=0x923482394823948239
+123-45-6789
+password=mysecretpassword</pre>
+
+          <p class="muted" style="margin-top:10px;">
+            ShieldLens will warn you with a risk score, detected types, and recommended fixes.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="trust" class="section">
+      <h2>Trust & Safety</h2>
+      <div class="grid two">
+        <div class="panel">
+          <h3>Privacy-first scanning</h3>
+          <p>
+            ShieldLens minimizes exposure by scanning only what’s needed to generate a risk report.
+            Sensitive data can be redacted before storage, and audit logs can be encrypted.
+          </p>
+        </div>
+        <div class="panel">
+          <h3>Clear, actionable warnings</h3>
+          <p>
+            Every alert includes a score, evidence snippets, and exactly what to do next
+            (remove secrets, rotate keys, use environment variables, etc.).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <h2>FAQ</h2>
+      <div class="grid two">
+        <div class="panel">
+          <h3>Why not a Chrome Web Store install?</h3>
+          <p>
+            Web Store publishing requires review + compliance. For now, Developer Mode enables quick installation.
+          </p>
+        </div>
+        <div class="panel">
+          <h3>How do I update ShieldLens?</h3>
+          <p>
+            Download the newest zip, unzip it, then go to <code>chrome://extensions</code> and press <b>Reload</b>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>ShieldLens AI</div>
+      <div class="muted">
+        <!-- TODO: Replace this text once domain is live -->
+        Localhost build — domain coming soon.
+      </div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
