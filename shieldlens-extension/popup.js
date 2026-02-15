@@ -1,11 +1,9 @@
-const DEFAULT_API_BASE = "http://209.222.12.247:8000";
+const API_BASE = "http://209.222.12.247:8000";
 const MAX_LIMIT = 50;
 
 const elList = document.getElementById("list");
 const elStatus = document.getElementById("status");
 const elRefresh = document.getElementById("refresh");
-const elApiBase = document.getElementById("apiBase");
-const elSaveApi = document.getElementById("saveApi");
 
 function escapeHTML(s) {
   return String(s)
@@ -24,24 +22,14 @@ function badgeClass(level) {
 
 function formatTime(iso) {
   try {
-    const d = new Date(iso);
-    return d.toLocaleString();
+    return new Date(iso).toLocaleString();
   } catch {
     return iso || "";
   }
 }
 
-async function getApiBase() {
-  const stored = await chrome.storage.local.get(["apiBase"]);
-  return stored.apiBase || DEFAULT_API_BASE;
-}
-
-async function setApiBase(val) {
-  await chrome.storage.local.set({ apiBase: val });
-}
-
 async function fetchJSON(url) {
-  const resp = await fetch(url, { method: "GET" });
+  const resp = await fetch(url);
   if (!resp.ok) {
     const txt = await resp.text().catch(() => "");
     throw new Error(`HTTP ${resp.status}: ${txt || resp.statusText}`);
@@ -50,23 +38,22 @@ async function fetchJSON(url) {
 }
 
 function renderEmpty(msg) {
-  elList.innerHTML = `<div class="card"><div class="meta">${escapeHTML(msg)}</div></div>`;
+  elList.innerHTML =
+    `<div class="card"><div class="meta">${escapeHTML(msg)}</div></div>`;
 }
 
 function renderReports(reports) {
   if (!Array.isArray(reports) || reports.length === 0) {
-    renderEmpty("No reports yet. Upload a file and scan to create one.");
+    renderEmpty("No reports yet.");
     return;
   }
 
-  elList.innerHTML = reports.map((r) => {
-    const types = Array.isArray(r.detected_types) ? r.detected_types.join(", ") : "";
-    const evid = Array.isArray(r.evidence_snippets) ? r.evidence_snippets : [];
-    const risk = Number(r.risk_score ?? 0);
-    const level = String(r.risk_level || "low");
+  elList.innerHTML = reports.map(r => {
+    const types = (r.detected_types || []).join(", ");
+    const evid = r.evidence_snippets || [];
 
     return `
-      <div class="card" data-id="${escapeHTML(r.id)}">
+      <div class="card">
         <div class="cardTop">
           <div>
             <div class="file">${escapeHTML(r.filename || "(no filename)")}</div>
@@ -75,65 +62,54 @@ function renderReports(reports) {
               ${escapeHTML(r.page_url || "")}
             </div>
           </div>
-          <div class="badge ${badgeClass(level)}">${escapeHTML(level.toUpperCase())} • ${escapeHTML(risk)}</div>
+
+          <div class="badge ${badgeClass(r.risk_level)}">
+            ${escapeHTML(r.risk_level.toUpperCase())} • ${escapeHTML(r.risk_score)}
+          </div>
         </div>
 
-        <div class="meta" style="margin-top:8px;">
+        <div class="meta">
           <b>Detected:</b> ${escapeHTML(types || "None")}
         </div>
 
         <div class="details">
-          <div class="meta"><b>Proof hash:</b> ${escapeHTML(r.proof_hash || "")}</div>
+          <div class="meta"><b>Proof hash:</b> ${escapeHTML(r.proof_hash)}</div>
           <div class="meta"><b>Source IP:</b> ${escapeHTML(r.source_ip || "")}</div>
-          <div class="meta"><b>Evidence:</b></div>
-          ${evid.length ? evid.slice(0, 8).map(s => `<div class="code">${escapeHTML(s)}</div>`).join("") : `<div class="meta">None</div>`}
+
+          ${evid.length
+            ? evid.map(e => `<div class="code">${escapeHTML(e)}</div>`).join("")
+            : `<div class="meta">None</div>`
+          }
         </div>
       </div>
     `;
   }).join("");
 
-  // click-to-expand
-  for (const card of elList.querySelectorAll(".card")) {
-    card.addEventListener("click", () => {
-      card.classList.toggle("open");
-    });
-  }
+  document.querySelectorAll(".card").forEach(card => {
+    card.onclick = () => card.classList.toggle("open");
+  });
 }
 
 async function loadReports() {
-  elStatus.textContent = "Loading…";
+  elStatus.textContent = "Loading...";
   elList.innerHTML = "";
 
   try {
-    const apiBase = await getApiBase();
-    const url = `${apiBase.replace(/\/$/, "")}/reports/latest?limit=${MAX_LIMIT}`;
-    const reports = await fetchJSON(url);
-    elStatus.textContent = `Loaded ${Array.isArray(reports) ? reports.length : 0} report(s). Click a card to expand.`;
+    const reports = await fetchJSON(
+      `${API_BASE}/reports/latest?limit=${MAX_LIMIT}`
+    );
+
+    elStatus.textContent =
+      `Loaded ${reports.length} report(s).`;
+
     renderReports(reports);
+
   } catch (e) {
-    elStatus.textContent = `Error: ${e.message || e}`;
-    renderEmpty("Could not load reports. Check API base + server connectivity.");
+    elStatus.textContent = `Error: ${e.message}`;
+    renderEmpty("Could not connect to backend.");
   }
 }
 
-async function init() {
-  const apiBase = await getApiBase();
-  elApiBase.value = apiBase;
+elRefresh.onclick = loadReports;
 
-  elSaveApi.addEventListener("click", async () => {
-    const val = elApiBase.value.trim();
-    if (!val.startsWith("http://") && !val.startsWith("https://")) {
-      elStatus.textContent = "API base must start with http:// or https://";
-      return;
-    }
-    await setApiBase(val.replace(/\/$/, ""));
-    elStatus.textContent = "Saved API base.";
-    await loadReports();
-  });
-
-  elRefresh.addEventListener("click", loadReports);
-
-  await loadReports();
-}
-
-init();
+loadReports();

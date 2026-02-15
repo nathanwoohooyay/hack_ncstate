@@ -1,3 +1,0 @@
-Hello world
-This is just a normal file
-Nothing sensitive here
