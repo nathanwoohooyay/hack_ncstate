@@ -1,0 +1,124 @@
+body {
+  margin: 0;
+  padding: 12px;
+  width: 380px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #0f0f10;
+  color: #fff;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.title { font-weight: 800; font-size: 16px; }
+.subtitle { opacity: .75; font-size: 12px; }
+
+.row {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 8px;
+}
+
+.input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  outline: none;
+}
+
+.btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.10);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.status {
+  font-size: 12px;
+  opacity: .85;
+  margin: 6px 0 10px;
+  min-height: 16px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 520px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.card {
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.file {
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.meta {
+  font-size: 12px;
+  opacity: .75;
+  margin-top: 4px;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.08);
+  white-space: nowrap;
+}
+
+.badge.high { border-color: rgba(255,0,0,.35); background: rgba(255,0,0,.14); }
+.badge.medium { border-color: rgba(255,200,0,.35); background: rgba(255,200,0,.14); }
+.badge.low { border-color: rgba(0,255,150,.30); background: rgba(0,255,150,.12); }
+
+.details {
+  margin-top: 8px;
+  display: none;
+  font-size: 12px;
+  opacity: .95;
+  line-height: 1.35;
+}
+
+.card.open .details { display: block; }
+
+.code {
+  display: block;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.10);
+  padding: 8px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-top: 6px;
+}

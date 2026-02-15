@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ShieldLens</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div>
+        <div class="title">ShieldLens</div>
+        <div class="subtitle">Upload history & scan reports</div>
+      </div>
+      <button id="refresh" class="btn">Refresh</button>
+    </div>
+
+    <div class="row">
+      <input id="apiBase" class="input" placeholder="API Base (http://209.222.12.247:8000)" />
+      <button id="saveApi" class="btn">Save</button>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <div id="list" class="list"></div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
