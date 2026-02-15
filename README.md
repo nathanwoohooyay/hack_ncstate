@@ -4,6 +4,8 @@ Contributors: Tobore Takpor, Michael Vargas, Victor Hernandez, and Nathan Jiang
 # ShieldLens:
 Your browser’s real-time guardrail against sensitive data leaks.
 
+![image alt](https://github.com/nathanwoohooyay/hack_ncstate/blob/7043131f89ef0d9e037f9857a2e20f675f91dbc0/ShieldLens.png)
+
 # Inspiration:
 
 The rapid growth of AI tools, cloud platforms, and online applications has changed how students share information. Every day, students copy and paste text into LLMs, use file sharing platforms, and send out emails with files attached on various platforms. In this fast-paced digitalized environment, it is easy to accidentally include sensitive information such as Social Security numbers, API keys, private keys, passwords, student IDs, or personal contact details without realizing it.
