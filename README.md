@@ -1,4 +1,4 @@
-# hack_ncstate 2026
+# Hack NC State 2026
 Contributors: Tobore Takpor, Michael Vargas, Victor Hernandez, and Nathan Jiang
 
 # ShieldLens:
